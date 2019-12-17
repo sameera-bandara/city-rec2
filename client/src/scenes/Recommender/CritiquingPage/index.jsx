@@ -35,7 +35,7 @@ class CritiquingPage extends React.Component {
 
     let critiques = [];
 
-    if (typeof cities === 'undefined' || cities.length == 0){
+    if (typeof cities === 'undefined' || cities.length === 0){
       critiques = [{currentRecommendation: true, name: ''}];
     }
     else{

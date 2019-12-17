@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageTitle, PageSubtitle, StandardRow, StandardLargeContainer } from '../../../CommonStyles';
+import { PageTitle, StandardRow, StandardLargeContainer } from '../../../CommonStyles';
 import { CenteredContainer } from '../styles';
 import CityDetailsPane from './CityDetailsPane';
 import { HintMessage, SurveyFootnote } from './styles';
@@ -12,15 +12,6 @@ import isEqual from 'lodash/isEqual';
 
 const questionsSet = {
   elements: [
-    // {
-    //   type: "radiogroup",
-    //   name: "recommendation",
-    //   title: "Based on your preferences, which of the recommended travel destinations would you have selected?",
-    //   isRequired: true,
-    //   choices: [
-    //     'Neither of them'
-    //   ]
-    // },
     {
       type: "matrix",
       name: "evaluation",

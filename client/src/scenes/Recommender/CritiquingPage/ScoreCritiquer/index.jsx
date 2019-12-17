@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip'
 import Spinner from "../../../../components/Spinner";
 
@@ -38,10 +38,10 @@ const FeatureLabelDiv= styled.div`
     text-align: left;
 `;
 
-const StatsDiv= styled.div`
-    margin-bottom: 10px;
-    background-color: white;
-`;
+// const StatsDiv= styled.div`
+//     margin-bottom: 10px;
+//     background-color: white;
+// `;
 
 const FeatureRankDiv= styled.div`
     font-size: 15px;
@@ -127,10 +127,10 @@ class ScoreCritiquer extends React.Component {
     ReactDOM.findDOMNode(this.refs[refVal]).checked = true;
   }
 
-  setTravelSelected = (i) => {
-    let refVal = "travel"+i;
-    ReactDOM.findDOMNode(this.refs[refVal]).checked = true;
-  }
+  // setTravelSelected = (i) => {
+  //   let refVal = "travel"+i;
+  //   ReactDOM.findDOMNode(this.refs[refVal]).checked = true;
+  // }
 
   setTemperatureSelected = (i) => {
     let refVal = "temperature"+i;
@@ -147,10 +147,10 @@ class ScoreCritiquer extends React.Component {
     ReactDOM.findDOMNode(this.refs[refVal]).checked = true;
   }
 
-  setShopsSelected = (i) => {
-    let refVal = "shop"+i;
-    ReactDOM.findDOMNode(this.refs[refVal]).checked = true;
-  }
+  // setShopsSelected = (i) => {
+  //   let refVal = "shop"+i;
+  //   ReactDOM.findDOMNode(this.refs[refVal]).checked = true;
+  // }
 
   handleNightlifeClick = (i, feature) => {
     const { cities } = this.props;
@@ -173,19 +173,19 @@ class ScoreCritiquer extends React.Component {
     this.selectOtherFeatures(critiquedCity, feature);
   }
 
-  handleShopsClick = (i, feature) => {
-    const { cities } = this.props;
-
-    let critiquedCity = cities.find(({shopsAndServicesRank}) => shopsAndServicesRank === i);
-    this.selectOtherFeatures(critiquedCity, feature);
-  }
-
-  handleTravelClick = (i, feature) => {
-    const { cities } = this.props;
-
-    let critiquedCity = cities.find(({travelAndTransportRank}) => travelAndTransportRank === i);
-    this.selectOtherFeatures(critiquedCity, feature);
-  }
+  // handleShopsClick = (i, feature) => {
+  //   const { cities } = this.props;
+  //
+  //   let critiquedCity = cities.find(({shopsAndServicesRank}) => shopsAndServicesRank === i);
+  //   this.selectOtherFeatures(critiquedCity, feature);
+  // }
+  //
+  // handleTravelClick = (i, feature) => {
+  //   const { cities } = this.props;
+  //
+  //   let critiquedCity = cities.find(({travelAndTransportRank}) => travelAndTransportRank === i);
+  //   this.selectOtherFeatures(critiquedCity, feature);
+  // }
 
   handleOutdoorClick = (i, feature) => {
     const { cities } = this.props;
@@ -274,7 +274,7 @@ class ScoreCritiquer extends React.Component {
   };
 
   render() {
-    const { cities, statistics, isLoading } = this.props;
+    const { cities, isLoading } = this.props;
     let recommendedCity = this.props.cities.find(({currentRecommendation}) => currentRecommendation === true);
     let critiquedCity = this.state.critiquedCity;
 
@@ -313,19 +313,19 @@ class ScoreCritiquer extends React.Component {
       return rObj;
     });
 
-    let travelAndTransportRank = cities.map(a => {
-      let rObj = {};
-      rObj.id = a.travelAndTransportRank;
-      rObj.name = a.name;
-      return rObj;
-    });
-
-    let shopsAndServicesRank = cities.map(a => {
-      let rObj = {};
-      rObj.id= a.shopsAndServicesRank;
-      rObj.name = a.name;
-      return rObj;
-    });
+    // let travelAndTransportRank = cities.map(a => {
+    //   let rObj = {};
+    //   rObj.id = a.travelAndTransportRank;
+    //   rObj.name = a.name;
+    //   return rObj;
+    // });
+    //
+    // let shopsAndServicesRank = cities.map(a => {
+    //   let rObj = {};
+    //   rObj.id= a.shopsAndServicesRank;
+    //   rObj.name = a.name;
+    //   return rObj;
+    // });
 
     let artsAndEntertainmentRank = cities.map(a => {
       let rObj = {};
@@ -333,19 +333,6 @@ class ScoreCritiquer extends React.Component {
       rObj.name = a.name;
       return rObj;
     });
-
-    const getSelectedRankNightlife = (i) => {
-      if (recommendedCity.nightlifeRank === i) {
-        return <RecommendedCityOption key={i} index={i} id={"nightlife"+i} style={this.getStyle(i, "nightlifeRank")}><StyledInput type="radio" name="nightlife" ref={"nightlife"+i} checked={recommendedCity.id === critiquedCity.id} onClick={() => this.handleNightlifeClick(i, "nightlife")}/><StyledLabel>{recommendedCity.name}</StyledLabel></RecommendedCityOption>;
-      }
-      let cityForIndex = nightlifeRank.find(({id}) => id === i);
-      if (cityForIndex){
-        return <CityOption key={i} index={i} id={"nightlife"+i} style={this.getStyle(i, "nightlifeRank")}><StyledInput type="radio" name="nightlife" ref={"nightlife"+i} onClick={() => this.handleNightlifeClick(i, "nightlife")}/><StyledLabel style={this.getStyleLabel(i, "nightlifeRank")}>{cityForIndex.name}</StyledLabel></CityOption>;
-      }
-      else{
-        return <Dot key={i} index={i} ref={"nightlife"+i} style={this.getStyle(i, "nightlifeRank")}>.</Dot>;
-      }
-    };
 
     const getPlaceHolderNightlife = (i) => {
       if (recommendedCity.nightlifeRank === i) {
@@ -412,31 +399,31 @@ class ScoreCritiquer extends React.Component {
       }
     };
 
-    const getPlaceHolderTravelAndTransport = (i) => {
-      if (recommendedCity.travelAndTransportRank === i) {
-        return <RecommendedCityOption key={i} index={i} id={"travel"+i} style={this.getStyle(i, "travelAndTransportRank")}><StyledInput type="radio" name="travel" ref={"travel"+i} checked={recommendedCity.id === critiquedCity.id} onClick={() => this.handleTravelClick(i, "travel")}/><StyledLabel>{recommendedCity.name}</StyledLabel></RecommendedCityOption>;
-      }
-      let cityForIndex = travelAndTransportRank.find(({id}) => id === i);
-      if (cityForIndex){
-        return <CityOption key={i} index={i} id={"travel"+i} style={this.getStyle(i, "travelAndTransportRank")}><StyledInput type="radio" name="travel" ref={"travel"+i} onClick={() => this.handleTravelClick(i, "travel")}/><StyledLabel style={this.getStyleLabel(i, "travelAndTransportRank")}>{cityForIndex.name}</StyledLabel></CityOption>;
-      }
-      else{
-        return <Dot key={i} index={i} ref={"travel"+i} style={this.getStyle(i, "travelAndTransportRank")}>.</Dot>;
-      }
-    };
-
-    const getPlaceHolderShopsAndService = (i) => {
-      if (recommendedCity.shopsAndServicesRank === i) {
-        return <RecommendedCityOption key={i} index={i} id={"shop"+i} style={this.getStyle(i, "shopsAndServicesRank")}><StyledInput type="radio" name="shop" ref={"shop"+i} checked={recommendedCity.id === critiquedCity.id} onClick={() => this.handleShopsClick(i, "shop")}/><StyledLabel>{recommendedCity.name}</StyledLabel></RecommendedCityOption>;
-      }
-      let cityForIndex = shopsAndServicesRank.find(({id}) => id === i);
-      if (cityForIndex){
-        return <CityOption key={i} index={i} id={"shop"+i} style={this.getStyle(i, "shopsAndServicesRank")}><StyledInput type="radio" name="shop" ref={"shop"+i} onClick={() => this.handleShopsClick(i, "shop")}/><StyledLabel style={this.getStyleLabel(i, "shopsAndServicesRank")}>{cityForIndex.name}</StyledLabel></CityOption>;
-      }
-      else{
-        return <Dot key={i} index={i} ref={"shop"+i} style={this.getStyle(i, "shopsAndServicesRank")}>.</Dot>;
-      }
-    };
+    // const getPlaceHolderTravelAndTransport = (i) => {
+    //   if (recommendedCity.travelAndTransportRank === i) {
+    //     return <RecommendedCityOption key={i} index={i} id={"travel"+i} style={this.getStyle(i, "travelAndTransportRank")}><StyledInput type="radio" name="travel" ref={"travel"+i} checked={recommendedCity.id === critiquedCity.id} onClick={() => this.handleTravelClick(i, "travel")}/><StyledLabel>{recommendedCity.name}</StyledLabel></RecommendedCityOption>;
+    //   }
+    //   let cityForIndex = travelAndTransportRank.find(({id}) => id === i);
+    //   if (cityForIndex){
+    //     return <CityOption key={i} index={i} id={"travel"+i} style={this.getStyle(i, "travelAndTransportRank")}><StyledInput type="radio" name="travel" ref={"travel"+i} onClick={() => this.handleTravelClick(i, "travel")}/><StyledLabel style={this.getStyleLabel(i, "travelAndTransportRank")}>{cityForIndex.name}</StyledLabel></CityOption>;
+    //   }
+    //   else{
+    //     return <Dot key={i} index={i} ref={"travel"+i} style={this.getStyle(i, "travelAndTransportRank")}>.</Dot>;
+    //   }
+    // };
+    //
+    // const getPlaceHolderShopsAndService = (i) => {
+    //   if (recommendedCity.shopsAndServicesRank === i) {
+    //     return <RecommendedCityOption key={i} index={i} id={"shop"+i} style={this.getStyle(i, "shopsAndServicesRank")}><StyledInput type="radio" name="shop" ref={"shop"+i} checked={recommendedCity.id === critiquedCity.id} onClick={() => this.handleShopsClick(i, "shop")}/><StyledLabel>{recommendedCity.name}</StyledLabel></RecommendedCityOption>;
+    //   }
+    //   let cityForIndex = shopsAndServicesRank.find(({id}) => id === i);
+    //   if (cityForIndex){
+    //     return <CityOption key={i} index={i} id={"shop"+i} style={this.getStyle(i, "shopsAndServicesRank")}><StyledInput type="radio" name="shop" ref={"shop"+i} onClick={() => this.handleShopsClick(i, "shop")}/><StyledLabel style={this.getStyleLabel(i, "shopsAndServicesRank")}>{cityForIndex.name}</StyledLabel></CityOption>;
+    //   }
+    //   else{
+    //     return <Dot key={i} index={i} ref={"shop"+i} style={this.getStyle(i, "shopsAndServicesRank")}>.</Dot>;
+    //   }
+    // };
 
     const getPlaceHolderAverageTemperature = (i) => {
       if (recommendedCity.averageTemperatureRank === i) {

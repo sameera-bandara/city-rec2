@@ -20,13 +20,6 @@ const ModifiedCardHead = styled(CardHead)`
   }
 `;
 
-const CityImage = styled.div`
-  background-color: #E9EAEE;
-  background-image: url(${p => p.pictureUrl});
-  background-size: cover;
-  height: 100%;
-`;
-
 const RightSideContent = styled.div`
   width: 50%;
   min-height: 107px;

@@ -1,7 +1,6 @@
 import React from 'react';
-import { StandardRow, StandardSmallContainer } from '../../../CommonStyles';
+import { StandardRow } from '../../../CommonStyles';
 import { CenteredContainer, BannerWithMargin } from '../styles';
-import City from './City';
 import Spinner from '../../../components/Spinner';
 import ReactTooltip from 'react-tooltip';
 import ScoreRefiner from './ScoreRefiner';
@@ -33,18 +32,6 @@ const NextQuestionButton = styled.button`
     background-color: ${p => p.theme.primary};
     color: white;
   }
-`;
-
-const SuccessMessage = styled.div`
-  color: ${p => p.theme.primaryText};
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 14px;
-  min-height: 118px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 `;
 
 const Refiner =  styled.div.attrs(() => ({
@@ -100,14 +87,6 @@ class RefiningPage extends React.Component {
     }
   }
 
-  onNextQuestionClick = () => {
-    const { currentAspectIndex } = this.state;
-    const { setRefinementsCompletedFlag } = this.props;
-
-    setRefinementsCompletedFlag(currentAspectIndex+1 >= aspects.length);
-    this.setState({ currentAspectIndex: currentAspectIndex+1 });
-  }
-
   disableNextButton = (refinements) => {
     let anyMatch = aspects.find(aspect =>
       !possibleAspectValues.has(refinements[aspect.aspectCodeName])
@@ -118,15 +97,8 @@ class RefiningPage extends React.Component {
 
   render() {
     const { cities, refinements, isLoading, handleRefinementAction, onNextStepClick } = this.props;
-    const { currentAspectIndex } = this.state;
 
     let toolTipText = 'Please select a value for all aspects above';
-
-    const renderedCities = (cities.slice(0, 4)).map(c => {
-      return (
-      <StandardSmallContainer key={c.id}>
-        <City city={c} />
-      </StandardSmallContainer>);});
 
     return (
       <CenteredContainer>
