@@ -1,0 +1,31 @@
+{
+  "name": "cityrec2",
+  "version": "1.0.0",
+  "private": true,
+  "author": "Sameera Thimbiri Palage",
+  "scripts": {
+    "client": "cd client && yarn start",
+    "server": "nodemon server.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "start": "node server.js",
+    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "euclidean-distance": "^1.0.0",
+    "express": "^4.16.4",
+    "express-session": "^1.17.0",
+    "helmet": "^3.15.0",
+    "lodash": "^4.17.11",
+    "mathjs": "^6.2.3",
+    "mongoose": "^5.3.14",
+    "node-apriori": "^1.0.0",
+    "normal-distribution": "0.0.7",
+    "stats-lite": "^2.2.0",
+    "uuid": "^3.3.3"
+  },
+  "devDependencies": {
+    "concurrently": "^4.0.1"
+  }
+}
