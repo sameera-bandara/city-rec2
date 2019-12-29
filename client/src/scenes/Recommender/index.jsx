@@ -139,7 +139,7 @@ class Recommender extends Component {
 
 
   submitCritiquingSurvey = surveyData => {
-    const { cities, selectedCities, refinements, startTime, endTime, clickCount, dismissedCities, cityRefreshCount } = this.state;
+    const { cities, selectedCities, refinements, recommendations, startTime, endTime, clickCount, dismissedCities, cityRefreshCount } = this.state;
     const version = this.getVersion();
     const code = this.getCode();
 
@@ -147,6 +147,7 @@ class Recommender extends Component {
 
     postSurvey({
       initialCities: cities.map(c => c.name),
+      // recommendations: recommendations.map(c => c.name),
       selectedCities: selectedCityNames,
       refinements,
       ...surveyData,
@@ -181,9 +182,9 @@ class Recommender extends Component {
   }
 
   refineRecommendations = async () => {
-    const { selectedCities, refinements } = this.state;
+    const { refinements } = this.state;
     this.setState({ isLoading: true });
-    const recommendations = await fetchRefinedRecommendations(selectedCities, refinements);
+    const recommendations = await fetchRefinedRecommendations(refinements);
     this.setState({ recommendations, isLoading: false });
   }
 
@@ -198,6 +199,7 @@ class Recommender extends Component {
   }
 
   getRecommendationWithCritiques = async (selectedCityId) => {
+    const { selectedCities } = this.state;
     this.setState({ isLoading: true });
     const version = this.getVersion();
     const recommendationData = await fetchRecommendationWithCritiques(selectedCityId, version);
@@ -367,6 +369,7 @@ class Recommender extends Component {
         isLoading={isLoading}
         setRefinementsCompletedFlag={this.setRefinementsCompletedFlag}
         onNextStepClick={this.getSteps(2)[1].onNextClick}
+                    onCritiqueClick={this.refineRecommendations}
       />;
     const RenderedRecommendationsPage = props => 
       <RecommendationsPage {...props}

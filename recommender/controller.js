@@ -130,32 +130,34 @@ async function listCities(req, res, next) {
   }
 }
 
-async function recommendCities(req, res, next) {
+async function recommendInitialCity(req, res, next) {
   try {
     let selectedCityIds = [];
     if (req.query['selected_cities']) {
       selectedCityIds = Array.isArray(req.query['selected_cities']) ? req.query['selected_cities'] : [req.query['selected_cities']];
     }
-    if (selectedCityIds.length === 0) {
+    if (selectedCityIds.length === 0 && !req.session.recommendations) {
       return res.status(400).json('Selected cities are missing!');
-    }
-
-    if (!req.session.recommendations){
-      req.session.recommendations = [];
     }
     const cities = await City.find()
       .exec();
-    const selectedCities = vanillaFilter(cities, c => includes(selectedCityIds, String(c._id)));
+
+    req.session.recommendations = [];
+    req.session.initialCities = vanillaFilter(cities, c => includes(selectedCityIds, String(c._id)));
+
+    //get the city for user profile as the last recommendation. If this is the first iteration, get the cities from
+    // selected_city_ids
+    const userPreferredCities = req.session.initialCities;
 
     const userProfile = {
-      costOfLivingIndexScaled: sumBy(selectedCities, 'costOfLivingIndexScaled') / selectedCities.length,
-      venueCountScaled: sumBy(selectedCities, 'venueCountScaled') / selectedCities.length,
-      averageTemperatureScaled: sumBy(selectedCities, 'averageTemperatureScaled') / selectedCities.length,
-      averagePrecipitationScaled: sumBy(selectedCities, 'averagePrecipitationScaled') / selectedCities.length,
-      foodScaled: sumBy(selectedCities, 'foodScaled') / selectedCities.length,
-      artsAndEntertainmentScaled: sumBy(selectedCities, 'artsAndEntertainmentScaled') / selectedCities.length,
-      outdoorsAndRecreationScaled: sumBy(selectedCities, 'outdoorsAndRecreationScaled') / selectedCities.length,
-      nightlifeScaled: sumBy(selectedCities, 'nightlifeScaled') / selectedCities.length,
+      costOfLivingIndexScaled: sumBy(userPreferredCities, 'costOfLivingIndexScaled') / userPreferredCities.length,
+      venueCountScaled: sumBy(userPreferredCities, 'venueCountScaled') / userPreferredCities.length,
+      averageTemperatureScaled: sumBy(userPreferredCities, 'averageTemperatureScaled') / userPreferredCities.length,
+      averagePrecipitationScaled: sumBy(userPreferredCities, 'averagePrecipitationScaled') / userPreferredCities.length,
+      foodScaled: sumBy(userPreferredCities, 'foodScaled') / userPreferredCities.length,
+      artsAndEntertainmentScaled: sumBy(userPreferredCities, 'artsAndEntertainmentScaled') / userPreferredCities.length,
+      outdoorsAndRecreationScaled: sumBy(userPreferredCities, 'outdoorsAndRecreationScaled') / userPreferredCities.length,
+      nightlifeScaled: sumBy(userPreferredCities, 'nightlifeScaled') / userPreferredCities.length,
     }
 
     const refinements = {
@@ -206,7 +208,76 @@ async function recommendCities(req, res, next) {
       take(1)
     )(cities);
 
-    req.session.recommendations = [...req.session.recommendations, {'recommendation': citiesToRecommend[0]}];
+    req.session.recommendations = [citiesToRecommend[0]];
+    let remainingCities = vanillaFilter(cities, c => !includes(citiesToRecommend.map(c => c._id), c._id));
+    req.session.remainingCities = remainingCities;
+
+    res.set('Cache-Control', 'max-age=0, no-cache, must-revalidate, proxy-revalidate');
+    return res.status(200).json(citiesToRecommend);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function recommendCity(req, res, next) {
+  try {
+    const remainingCities = req.session.remainingCities;
+
+
+    const userPreferredCity = req.session.recommendations[req.session.recommendations.length - 1];
+
+    const userProfile = userPreferredCity;
+
+    const refinements = {
+      cost: parseInt(req.query['cost']),
+      temperature: parseInt(req.query['temperature']),
+      food: parseInt(req.query['food']),
+      arts: parseInt(req.query['arts']),
+      outdoors: parseInt(req.query['outdoors']),
+      nightlife: parseInt(req.query['nightlife'])
+    }
+
+    const activeRefinements = pickBy(refinements, isInteger);
+
+    for (const [featureCode, value] of Object.entries(activeRefinements)) {
+      userProfile[featureCodeToName[featureCode]] = userProfile[featureCodeToName[featureCode]] + (value / 10);
+      if (userProfile[featureCodeToName[featureCode]] < 0) {
+        userProfile[featureCodeToName[featureCode]] = 0
+      } else if (userProfile[featureCodeToName[featureCode]] > 1) {
+        userProfile[featureCodeToName[featureCode]] = 1
+      }
+    }
+
+    remainingCities.forEach(c => {
+      c.distance = distance(
+        [c.costOfLivingIndexScaled,
+          c.venueCountScaled,
+          c.averageTemperatureScaled,
+          c.averagePrecipitationScaled,
+          c.foodScaled,
+          c.artsAndEntertainmentScaled,
+          c.outdoorsAndRecreationScaled,
+          c.nightlifeScaled],
+        [userProfile.costOfLivingIndexScaled,
+          userProfile.venueCountScaled,
+          userProfile.averageTemperatureScaled,
+          userProfile.averagePrecipitationScaled,
+          userProfile.foodScaled,
+          userProfile.artsAndEntertainmentScaled,
+          userProfile.outdoorsAndRecreationScaled,
+          userProfile.nightlifeScaled]
+      );
+    });
+
+
+    const citiesToRecommend = flow(
+      // filter(c => !includes(selectedCityIds, String(c._id))),   // uncomment to filter out selected cities from recommendations
+      sortBy('distance'),
+      take(1)
+    )(remainingCities);
+
+    req.session.recommendations = [...req.session.recommendations, citiesToRecommend[0]];
+    req.session.remainingCities = vanillaFilter(remainingCities, c => !includes(citiesToRecommend.map(c => c._id), c._id));
 
     res.set('Cache-Control', 'max-age=0, no-cache, must-revalidate, proxy-revalidate');
     return res.status(200).json(citiesToRecommend);
@@ -394,7 +465,8 @@ function getSelectedCity(session) {
 
 module.exports = {
   listCities,
-  recommendCities,
+  recommendInitialCity,
+  recommendCity,
   postSurvey,
   recommendCityWithCritiques,
   recommendInitialCityWithCritiques

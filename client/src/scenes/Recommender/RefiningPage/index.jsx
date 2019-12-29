@@ -96,9 +96,21 @@ class RefiningPage extends React.Component {
   };
 
   render() {
-    const { cities, refinements, isLoading, handleRefinementAction, onNextStepClick } = this.props;
+    const { cities, refinements, isLoading, handleRefinementAction, onNextStepClick, onCritiqueClick } = this.props;
+    const { currentAspectIndex } = this.state;
+    //  let cities;
+    // if (typeof citiesParam === 'undefined' || citiesParam.length === 0){
+    //   cities = [{currentRecommendation: true, name: ''}];
+    // } else {
+    //   cities = citiesParam;
+    // }
 
-    let toolTipText = 'Please select a value for all aspects above';
+    // let toolTipText = 'Please select a value for all aspects above';
+    //
+    // let buttonText = "Select";
+    // let buttonTipText = "This was our initial recommendation for you. You can select `" + cities[0].name + "`" +
+    //   " below again";
+    // let differentCitiesSelected = false;
 
     return (
       <CenteredContainer>
@@ -113,6 +125,21 @@ class RefiningPage extends React.Component {
           : <CityDetailsPane city={cities[0] || {}}  maxSimilarity={10} isLoading={isLoading} />
         }
         <div style={{'margin': '10px', 'marginTop': '20px'}}>How did you find the below aspects of the recommendation ?</div>
+        <button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px'}} onClick={() => onCritiqueClick(false)}>Continue</button>
+
+        {/*{*/}
+        {/*  this.disableNextButton(refinements) ?*/}
+        {/*    <div>*/}
+        {/*      <ReactTooltip place="top" type="dark" effect="solid"/>*/}
+        {/*      <span data-tip={buttonTipText}><button style={{'font-weight': '600', 'border-radius': '0px', 'text-decoration':'line-through', 'marginRight': '5px'}} disabled={true}>{cities[0].name}</button></span>*/}
+        {/*      <button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px'}} onClick={() => onCritiqueClick()}>{buttonText} {cities[0].name}</button>*/}
+        {/*    </div>*/}
+        {/*    :*/}
+        {/*    <div>*/}
+        {/*      <button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px'}} onClick={() => onCritiqueClick()}>{buttonText} {cities[0].name}</button>*/}
+        {/*    </div>*/}
+        {/*}*/}
+
         <Refiner>
           <ScoreRefiner
             aspectName={aspects[0].aspectName}
@@ -161,23 +188,23 @@ class RefiningPage extends React.Component {
             selectedValue={refinements[aspects[5].aspectCodeName]}
           />
         </Refiner>
-        {
-          this.disableNextButton(refinements) ?
-            <div>
-              <ReactTooltip place="top" type="dark" effect="solid"/>
-              <span data-tip={toolTipText}>
-              <NextQuestionButton isDisabled={true} onClick={onNextStepClick}>
-                go to next step
-              </NextQuestionButton>
-              </span>
-            </div>
-          :
-            <div>
-              <NextQuestionButton isDisabled={false} onClick={onNextStepClick}>
-                go to next step
-              </NextQuestionButton>
-            </div>
-        }
+        {/*{*/}
+        {/*  this.disableNextButton(refinements) ?*/}
+        {/*    <div>*/}
+        {/*      <ReactTooltip place="top" type="dark" effect="solid"/>*/}
+        {/*      <span data-tip={toolTipText}>*/}
+        {/*      <NextQuestionButton isDisabled={true} onClick={onNextStepClick}>*/}
+        {/*        go to next step*/}
+        {/*      </NextQuestionButton>*/}
+        {/*      </span>*/}
+        {/*    </div>*/}
+        {/*  :*/}
+        {/*    <div>*/}
+        {/*      <NextQuestionButton isDisabled={false} onClick={onNextStepClick}>*/}
+        {/*        go to next step*/}
+        {/*      </NextQuestionButton>*/}
+        {/*    </div>*/}
+        {/*}*/}
       </CenteredContainer>
     );
   }

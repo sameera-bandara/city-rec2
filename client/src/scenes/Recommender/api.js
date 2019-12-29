@@ -27,7 +27,7 @@ export const fetchRecommendations = async selectedCities => {
       params.append('selected_cities', city)
     }
 
-    const response = await get('/api/recommendations', { params });
+    const response = await get('/api/initial-recommendation', { params });
     const cities = response.data.map(City.parse);
     return cities;
   } catch (error) {
@@ -35,18 +35,15 @@ export const fetchRecommendations = async selectedCities => {
   }
 }
 
-export const fetchRefinedRecommendations = async (selectedCities, refinements) => {
+export const fetchRefinedRecommendations = async (refinements) => {
   try {
     const params = new URLSearchParams();
-    for (const city of selectedCities) {
-      params.append('selected_cities', city)
-    }
 
     for (let [option, value] of Object.entries(refinements)) {
       params.append(option, value)
     }
 
-    const response = await get('/api/recommendations', { params });
+    const response = await get('/api/recommendation', { params });
     const cities = response.data.map(City.parse);
     return cities;
   } catch (error) {
