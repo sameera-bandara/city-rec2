@@ -208,7 +208,9 @@ async function recommendInitialCity(req, res, next) {
       take(1)
     )(cities);
 
-    req.session.recommendations = [citiesToRecommend[0]];
+    //update session
+    let recommendation = {'recommendation': citiesToRecommend[0], 'critiques': 'null'};
+    req.session.recommendations = [recommendation];
     let remainingCities = vanillaFilter(cities, c => !includes(citiesToRecommend.map(c => c._id), c._id));
     req.session.remainingCities = remainingCities;
 
@@ -224,7 +226,7 @@ async function recommendCity(req, res, next) {
     const remainingCities = req.session.remainingCities;
 
 
-    const userPreferredCity = req.session.recommendations[req.session.recommendations.length - 1];
+    const userPreferredCity = req.session.recommendations[req.session.recommendations.length - 1]['recommendation'];
 
     const userProfile = userPreferredCity;
 
@@ -276,7 +278,7 @@ async function recommendCity(req, res, next) {
       take(1)
     )(remainingCities);
 
-    req.session.recommendations = [...req.session.recommendations, citiesToRecommend[0]];
+    req.session.recommendations = [...req.session.recommendations, {'recommendation': citiesToRecommend[0], 'critiques': refinements}];
     req.session.remainingCities = vanillaFilter(remainingCities, c => !includes(citiesToRecommend.map(c => c._id), c._id));
 
     res.set('Cache-Control', 'max-age=0, no-cache, must-revalidate, proxy-revalidate');
