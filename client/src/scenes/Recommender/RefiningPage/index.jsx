@@ -8,32 +8,6 @@ import styled from 'styled-components';
 import HoverInfoIndicator from '../../../components/HoverInfoIndicator';
 import CityDetailsPane from "../FinalRecommendationPage/CityDetailsPane";
 
-const NextQuestionButton = styled.button`
-  background-color: ${p => p.isDisabled ? 'transparent' : 'white'};
-  transition: all 200ms ease-in-out;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 6px 17px;
-  letter-spacing: 2.8px;
-  color: ${p => p.theme.secondaryText};
-  border: 1px solid ${p => p.theme.secondaryText}80;
-  margin-top: 10px;
-  border-radius: 100px;
-  cursor: pointer;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-  pointer-events: ${p => p.isDisabled ? 'none' : 'all'};
-
-  &, :hover, :focus, :active {
-    outline: none;
-  }
-
-  &:hover {
-    background-color: ${p => p.theme.primary};
-    color: white;
-  }
-`;
-
 const Refiner =  styled.div.attrs(() => ({
     className: 'offset-md-1 col-md-10 col-sm-12'
   }
@@ -97,20 +71,10 @@ class RefiningPage extends React.Component {
 
   render() {
     const { cities, refinements, isLoading, handleRefinementAction, onNextStepClick, onCritiqueClick } = this.props;
-    const { currentAspectIndex } = this.state;
-    //  let cities;
-    // if (typeof citiesParam === 'undefined' || citiesParam.length === 0){
-    //   cities = [{currentRecommendation: true, name: ''}];
-    // } else {
-    //   cities = citiesParam;
-    // }
 
-    // let toolTipText = 'Please select a value for all aspects above';
-    //
-    // let buttonText = "Select";
-    // let buttonTipText = "This was our initial recommendation for you. You can select `" + cities[0].name + "`" +
-    //   " below again";
-    // let differentCitiesSelected = false;
+    let buttonTipText = "Select this city and finish recommendation";
+    let disabledContinueText = "Please select values for below aspects";
+    let continueText = "Continue recommendation with adjustments to the feature values";
 
     return (
       <CenteredContainer>
@@ -121,90 +85,78 @@ class RefiningPage extends React.Component {
         </StandardRow>
 
         {isLoading
-          ? <Spinner />
+          ? <Spinner/>
           : <CityDetailsPane city={cities[0] || {}}  maxSimilarity={10} isLoading={isLoading} />
         }
         <div style={{'margin': '10px', 'marginTop': '20px'}}>How did you find the below aspects of the recommendation ?</div>
-        <button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px'}} onClick={() => onCritiqueClick(false)}>Continue</button>
+        <ReactTooltip place="top" type="dark" effect="solid"/>
 
-        {/*{*/}
-        {/*  this.disableNextButton(refinements) ?*/}
-        {/*    <div>*/}
-        {/*      <ReactTooltip place="top" type="dark" effect="solid"/>*/}
-        {/*      <span data-tip={buttonTipText}><button style={{'font-weight': '600', 'border-radius': '0px', 'text-decoration':'line-through', 'marginRight': '5px'}} disabled={true}>{cities[0].name}</button></span>*/}
-        {/*      <button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px'}} onClick={() => onCritiqueClick()}>{buttonText} {cities[0].name}</button>*/}
-        {/*    </div>*/}
-        {/*    :*/}
-        {/*    <div>*/}
-        {/*      <button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px'}} onClick={() => onCritiqueClick()}>{buttonText} {cities[0].name}</button>*/}
-        {/*    </div>*/}
-        {/*}*/}
+        {
+          this.disableNextButton(refinements) ?
+            <div>
+              <span data-tip={buttonTipText}><button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px', 'margin': '5px'}} onClick={() => onNextStepClick()}>Select</button></span>
+              <span data-tip={disabledContinueText}><button style={{'font-weight': '600', 'border-radius': '0px', 'text-decoration':'line-through', 'marginRight': '5px'}} onClick={() => onCritiqueClick(false)} disabled={true}>Continue with Adjustments</button></span>
+            </div>
+            :
+            <div>
+              <span data-tip={buttonTipText}><button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px', 'margin': '5px'}} onClick={() => onNextStepClick()}>Select</button></span>
+              <span data-tip={continueText}><button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px'}} onClick={() => onCritiqueClick(false)}>Continue with Adjustments</button></span>
+            </div>
+        }
 
-        <Refiner>
-          <ScoreRefiner
-            aspectName={aspects[0].aspectName}
-            aspectCodeName={aspects[0].aspectCodeName}
-            handleRefinementAction={handleRefinementAction}
-            selectedValue={refinements[aspects[0].aspectCodeName]}
-          />
-        </Refiner>
-        <Refiner>
-          <ScoreRefiner
-            aspectName={aspects[1].aspectName}
-            aspectCodeName={aspects[1].aspectCodeName}
-            handleRefinementAction={handleRefinementAction}
-            selectedValue={refinements[aspects[1].aspectCodeName]}
-          />
-        </Refiner>
-        <Refiner>
-          <ScoreRefiner
-            aspectName={aspects[2].aspectName}
-            aspectCodeName={aspects[2].aspectCodeName}
-            handleRefinementAction={handleRefinementAction}
-            selectedValue={refinements[aspects[2].aspectCodeName]}
-          />
-        </Refiner>
-        <Refiner>
-          <ScoreRefiner
-            aspectName={aspects[3].aspectName}
-            aspectCodeName={aspects[3].aspectCodeName}
-            handleRefinementAction={handleRefinementAction}
-            selectedValue={refinements[aspects[3].aspectCodeName]}
-          />
-        </Refiner>
-        <Refiner>
-          <ScoreRefiner
-            aspectName={aspects[4].aspectName}
-            aspectCodeName={aspects[4].aspectCodeName}
-            handleRefinementAction={handleRefinementAction}
-            selectedValue={refinements[aspects[4].aspectCodeName]}
-          />
-        </Refiner>
-        <Refiner>
-          <ScoreRefiner
-            aspectName={aspects[5].aspectName}
-            aspectCodeName={aspects[5].aspectCodeName}
-            handleRefinementAction={handleRefinementAction}
-            selectedValue={refinements[aspects[5].aspectCodeName]}
-          />
-        </Refiner>
-        {/*{*/}
-        {/*  this.disableNextButton(refinements) ?*/}
-        {/*    <div>*/}
-        {/*      <ReactTooltip place="top" type="dark" effect="solid"/>*/}
-        {/*      <span data-tip={toolTipText}>*/}
-        {/*      <NextQuestionButton isDisabled={true} onClick={onNextStepClick}>*/}
-        {/*        go to next step*/}
-        {/*      </NextQuestionButton>*/}
-        {/*      </span>*/}
-        {/*    </div>*/}
-        {/*  :*/}
-        {/*    <div>*/}
-        {/*      <NextQuestionButton isDisabled={false} onClick={onNextStepClick}>*/}
-        {/*        go to next step*/}
-        {/*      </NextQuestionButton>*/}
-        {/*    </div>*/}
-        {/*}*/}
+        {isLoading ?
+        <Spinner/> :
+          <div>
+            <Refiner>
+              <ScoreRefiner
+                aspectName={aspects[0].aspectName}
+                aspectCodeName={aspects[0].aspectCodeName}
+                handleRefinementAction={handleRefinementAction}
+                selectedValue={refinements[aspects[0].aspectCodeName]}
+              />
+            </Refiner>
+            <Refiner>
+              <ScoreRefiner
+                aspectName={aspects[1].aspectName}
+                aspectCodeName={aspects[1].aspectCodeName}
+                handleRefinementAction={handleRefinementAction}
+                selectedValue={refinements[aspects[1].aspectCodeName]}
+              />
+            </Refiner>
+            <Refiner>
+              <ScoreRefiner
+                aspectName={aspects[2].aspectName}
+                aspectCodeName={aspects[2].aspectCodeName}
+                handleRefinementAction={handleRefinementAction}
+                selectedValue={refinements[aspects[2].aspectCodeName]}
+              />
+            </Refiner>
+            <Refiner>
+              <ScoreRefiner
+                aspectName={aspects[3].aspectName}
+                aspectCodeName={aspects[3].aspectCodeName}
+                handleRefinementAction={handleRefinementAction}
+                selectedValue={refinements[aspects[3].aspectCodeName]}
+              />
+            </Refiner>
+            <Refiner>
+              <ScoreRefiner
+                aspectName={aspects[4].aspectName}
+                aspectCodeName={aspects[4].aspectCodeName}
+                handleRefinementAction={handleRefinementAction}
+                selectedValue={refinements[aspects[4].aspectCodeName]}
+              />
+            </Refiner>
+            <Refiner>
+              <ScoreRefiner
+                aspectName={aspects[5].aspectName}
+                aspectCodeName={aspects[5].aspectCodeName}
+                handleRefinementAction={handleRefinementAction}
+                selectedValue={refinements[aspects[5].aspectCodeName]}
+              />
+            </Refiner>
+          </div>
+        }
       </CenteredContainer>
     );
   }

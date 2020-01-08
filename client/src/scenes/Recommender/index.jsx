@@ -183,9 +183,18 @@ class Recommender extends Component {
 
   refineRecommendations = async () => {
     const { refinements } = this.state;
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true});
     const recommendations = await fetchRefinedRecommendations(refinements);
-    this.setState({ recommendations, isLoading: false });
+    this.setState({ recommendations, isLoading: false, refinements: {
+        cost: "",
+        temperature: "",
+        food: "",
+        arts: "",
+        outdoors: "",
+        nightlife: "",
+        shops: "",
+        transport: ""
+      }});
   }
 
   getInitialRecommendationWithCritiques = async () => {
@@ -304,7 +313,7 @@ class Recommender extends Component {
         {
           name: '2. Refine your preferences',
           pathname: 'refining',
-          onNextClick: () => { this.refineRecommendations(); this.goToNextStep(`${match.path}/final-recommendation${location.search}`) },
+          onNextClick: () => { this.goToNextStep(`${match.path}/final-recommendation${location.search}`) },
           nextButtonText: '',
           disabledMessage: ''
         },
