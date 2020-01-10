@@ -450,9 +450,14 @@ function getRecommendations(session, version){
     });
     return recommendationStats;
   } else {
-    let recommendationStats = recommendations.map(recommendation =>
-    recommendation.recommendation.name
-    );
+    let recommendationStats = recommendations.map(recommendation => {
+      let recommendationStat = {};
+      recommendationStat["recommendation"] = recommendation.recommendation.name;
+
+      recommendationStat["critiques"] = recommendation.critiques;
+
+      return recommendationStat;
+    });
     return recommendationStats;
   }
 
