@@ -52,6 +52,7 @@ class RefiningPage extends React.Component {
     this.state = {
       currentAspectIndex: 0
     }
+    this.myRef = React.createRef();
   }
 
   componentDidMount() {
@@ -59,6 +60,11 @@ class RefiningPage extends React.Component {
     if (shouldResetRecommenderProgress()) {
       resetRecommenderProgress();
     }
+    this.scroll(this.myRef);
+  }
+
+  scroll(ref) {
+    ref.current.scrollTo(0, 0);
   }
 
   disableNextButton = (refinements) => {
@@ -77,6 +83,7 @@ class RefiningPage extends React.Component {
     let continueText = "Continue recommendation with adjustments to the feature values";
 
     return (
+      <div ref={this.myRef}>
       <CenteredContainer>
         <BannerWithMargin margin={15}>Please check out the initial recommendations below and provide some feedback!</BannerWithMargin>
 
@@ -158,6 +165,7 @@ class RefiningPage extends React.Component {
           </div>
         }
       </CenteredContainer>
+      </div>
     );
   }
 }
