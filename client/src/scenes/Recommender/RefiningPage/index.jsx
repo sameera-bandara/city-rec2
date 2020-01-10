@@ -78,6 +78,7 @@ class RefiningPage extends React.Component {
   render() {
     const { cities, refinements, isLoading, handleRefinementAction, onNextStepClick, onCritiqueClick } = this.props;
 
+    let city = cities[0] || {};
     let buttonTipText = "Select this city and finish recommendation";
     let disabledContinueText = "Please select values for below aspects";
     let continueText = "Continue recommendation with adjustments to the feature values";
@@ -93,23 +94,24 @@ class RefiningPage extends React.Component {
 
         {isLoading
           ? <Spinner/>
-          : <CityDetailsPane city={cities[0] || {}}  maxSimilarity={10} isLoading={isLoading} />
+          : <CityDetailsPane city={city}  maxSimilarity={10} isLoading={isLoading} />
         }
-        <div style={{'margin': '10px', 'marginTop': '20px'}}>How did you find the below aspects of the recommendation ?</div>
-        <ReactTooltip place="top" type="dark" effect="solid"/>
 
         {
           this.disableNextButton(refinements) ?
             <div>
-              <span data-tip={buttonTipText}><button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px', 'margin': '5px'}} onClick={() => onNextStepClick()}>Select</button></span>
-              <span data-tip={disabledContinueText}><button style={{'font-weight': '600', 'border-radius': '0px', 'text-decoration':'line-through', 'marginRight': '5px'}} onClick={() => onCritiqueClick(false)} disabled={true}>Continue with Adjustments</button></span>
+              <span data-tip={buttonTipText}><button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px', 'margin': '5px', 'marginTop': '10px'}} onClick={() => onNextStepClick()}>Select {city.name}</button></span>
+              <span data-tip={disabledContinueText}><button style={{'font-weight': '600', 'border-radius': '0px', 'text-decoration':'line-through', 'marginRight': '5px', 'marginTop': '10px'}} onClick={() => onCritiqueClick(false)} disabled={true}>Continue Recommendation with Adjustments</button></span>
             </div>
             :
             <div>
-              <span data-tip={buttonTipText}><button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px', 'margin': '5px'}} onClick={() => onNextStepClick()}>Select</button></span>
-              <span data-tip={continueText}><button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px'}} onClick={() => onCritiqueClick(false)}>Continue with Adjustments</button></span>
+              <span data-tip={buttonTipText}><button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px', 'margin': '5px', 'marginTop': '10px'}} onClick={() => onNextStepClick()}>Select {city.name}</button></span>
+              <span data-tip={continueText}><button style={{'background-color': '#474bde', 'color': 'white', 'font-weight': '600', 'border-radius': '5px', 'marginTop': '10px'}} onClick={() => onCritiqueClick(false)}>Continue Recommendation with Adjustments</button></span>
             </div>
         }
+
+        <div style={{'margin': '10px', 'marginTop': '10px'}}>How did you find the below aspects of the recommendation ?</div>
+        <ReactTooltip place="top" type="dark" effect="solid"/>
 
         {isLoading ?
         <Spinner/> :
