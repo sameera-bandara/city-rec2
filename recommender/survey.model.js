@@ -11,9 +11,8 @@ var surveySchema = new mongoose.Schema({
   requestDetails: { type: {} },
   
   initialCities: { type: [String] },
-  recommendations: { type: [{}] },
+  iterations: { type: [{}] },
   selectedCities: { type: [String] },
-  refinements: { type: {} },
 
   gender: { type: String },
   ageGroup: { type: String },

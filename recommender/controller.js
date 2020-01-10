@@ -50,13 +50,13 @@ async function postSurvey(req, res) {
   let version = req.body.version;
 
   if (version === 3 || version === 4 || version === 5) {
-    Survey.create({...req.body, recommendations: getRecommendations(req.session, version), requestDetails, recommendation: getSelectedCity(req.session)},
+    Survey.create({...req.body, iterations: getRecommendations(req.session, version), requestDetails, recommendation: getSelectedCity(req.session)},
       (err, survey) => {
         if (err) return res.status(500).send('A problem occurred while adding the survey to the database!');
         res.status(200).send('Survey answers submitted successfully!');
       });
   } else {
-    Survey.create({...req.body, requestDetails, recommendations: getRecommendations(req.session, version), recommendation: getSelectedCity(req.session)},
+    Survey.create({...req.body, requestDetails, iterations: getRecommendations(req.session, version), recommendation: getSelectedCity(req.session)},
       (err, survey) => {
         if (err) return res.status(500).send('A problem occurred while adding the survey to the database!');
         res.status(200).send('Survey answers submitted successfully!');
