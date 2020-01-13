@@ -1,6 +1,14 @@
 version: "2"
 services:
-  web:
+  ui:
+    build: ./client
+    ports:
+      - '3000:3000'
+    depends_on:
+      - api
+    environment:
+      API_HOST: api
+  api:
     build: .
     ports:
       - "5000:5000"
