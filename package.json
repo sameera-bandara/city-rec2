@@ -17,7 +17,7 @@
     "express": "^4.16.4",
     "express-session": "^1.17.0",
     "helmet": "^3.15.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "mathjs": "^6.2.3",
     "mongoose": "^5.3.14",
     "node-apriori": "^1.0.0",
