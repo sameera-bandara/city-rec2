@@ -11,10 +11,10 @@
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "dependencies": {
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.20.1",
     "cors": "^2.8.5",
     "euclidean-distance": "^1.0.0",
-    "express": "^4.16.4",
+    "express": "^4.18.2",
     "express-session": "^1.17.0",
     "helmet": "^3.15.0",
     "lodash": "^4.17.11",
